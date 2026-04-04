@@ -10,7 +10,7 @@ source:
   sha256: 81fc4e6bd174d238932a6415db7029a84acda5f4dc84a285ee0a10c6b3cb3580
 
 build:
-  number: 1
+  number: 2
   script:
     env:
       CARGO_PROFILE_RELEASE_STRIP: symbols
@@ -20,24 +20,20 @@ build:
         then:
           - cargo auditable install --locked --no-track --bins --root ${{ PREFIX }} --path .
           # generate shell completions
-          - if: build_platform == host_platform
-            then:
-              - mkdir -p $PREFIX/share/bash-completion/completions $PREFIX/share/fish/vendor_completions.d $PREFIX/share/zsh/site-functions
-              - $PREFIX/bin/dra completion bash > $PREFIX/share/bash-completion/completions/dra
-              - $PREFIX/bin/dra completion fish > $PREFIX/share/fish/vendor_completions.d/dra.fish
-              - $PREFIX/bin/dra completion zsh > $PREFIX/share/zsh/site-functions/_dra
+          - mkdir -p $PREFIX/share/bash-completion/completions $PREFIX/share/fish/vendor_completions.d $PREFIX/share/zsh/site-functions
+          - $PREFIX/bin/dra completion bash > $PREFIX/share/bash-completion/completions/dra
+          - $PREFIX/bin/dra completion fish > $PREFIX/share/fish/vendor_completions.d/dra.fish
+          - $PREFIX/bin/dra completion zsh > $PREFIX/share/zsh/site-functions/_dra
       - if: win
         then:
           - cargo auditable install --locked --no-track --bins --root %LIBRARY_PREFIX% --path .
           # generate shell completions
-          - if: build_platform == host_platform
-            then:
-              - mkdir %LIBRARY_PREFIX%\share\bash-completion\completions
-              - mkdir %LIBRARY_PREFIX%\share\fish\vendor_completions.d
-              - mkdir %LIBRARY_PREFIX%\share\zsh\site-functions
-              - '%LIBRARY_BIN%\dra.exe completion bash > %LIBRARY_PREFIX%\share\bash-completion\completions\dra'
-              - '%LIBRARY_BIN%\dra.exe completion fish > %LIBRARY_PREFIX%\share\fish\vendor_completions.d\dra.fish'
-              - '%LIBRARY_BIN%\dra.exe completion zsh > %LIBRARY_PREFIX%\share\zsh\site-functions\_dra'
+          - mkdir %LIBRARY_PREFIX%\share\bash-completion\completions
+          - mkdir %LIBRARY_PREFIX%\share\fish\vendor_completions.d
+          - mkdir %LIBRARY_PREFIX%\share\zsh\site-functions
+          - '%LIBRARY_BIN%\dra.exe completion bash > %LIBRARY_PREFIX%\share\bash-completion\completions\dra'
+          - '%LIBRARY_BIN%\dra.exe completion fish > %LIBRARY_PREFIX%\share\fish\vendor_completions.d\dra.fish'
+          - '%LIBRARY_BIN%\dra.exe completion zsh > %LIBRARY_PREFIX%\share\zsh\site-functions\_dra'
       - cargo-bundle-licenses --format yaml --output ./THIRDPARTY.yml
 
 requirements:
@@ -50,20 +46,18 @@ requirements:
 
 tests:
   - script:
-      - if: build_platform == host_platform
-        then:
-          - dra --help
-          - dra --version
+      - dra --help
+      - dra --version
   - package_contents:
       bin:
         - dra
       files:
-        - if: unix and build_platform == host_platform
+        - if: unix
           then:
             - share/bash-completion/completions/dra
             - share/fish/vendor_completions.d/dra.fish
             - share/zsh/site-functions/_dra
-        - if: win and build_platform == host_platform
+        - if: win
           then:
             - Library/share/bash-completion/completions/dra
             - Library/share/fish/vendor_completions.d/dra.fish
