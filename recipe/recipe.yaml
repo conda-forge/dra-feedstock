@@ -1,5 +1,5 @@
 context:
-  version: "0.10.2"
+  version: "0.10.3"
 
 package:
   name: dra
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/devmatteini/dra/archive/refs/tags/${{ version }}.tar.gz
-  sha256: 40881a16141ee9d45441ebd2db4b43d8ac664b84adbec17ce39f344763b1b415
+  sha256: f37abf2c8bb2ed19789e6ec98ef8e03120be2312f29964911b2227439ce08b0e
 
 build:
   number: 0
